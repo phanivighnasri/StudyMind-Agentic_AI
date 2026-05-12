@@ -8,3 +8,4 @@ langchain
 chromadb
 requests
 aiohttp
+flask
