@@ -3,14 +3,20 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GROK_API_KEY = os.getenv("GROK_API_KEY")
+# API — env file uses GROQ_API_KEY (not GROK)
+GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
+GROQ_BASE_URL = "https://api.groq.com/openai/v1"
+GROQ_MODEL = "llama-3.1-8b-instant"
 
-BASE_URL = "https://api.x.ai/v1"
-
+# Vector DB paths
 CONTENT_DB_PATH = "./db/content_db"
-SYLLABUS_DB_PATH = "./db/syllabus_db"
 
+# Quiz results persist here across sessions
+QUIZ_RESULTS_PATH = "./db/quiz_results.json"
+
+# Chunking
 CHUNK_SIZE = 500
 CHUNK_OVERLAP = 100
 
-SIMILARITY_THRESHOLD = 0.65
+# If max TF-IDF cosine similarity < this threshold → "Out of syllabus"
+OUT_OF_SYLLABUS_THRESHOLD = 0.05

@@ -1,0 +1,15 @@
+
+.env.local
+*.log
+rag_agent.log
+history.json
+.DS_Store
+
+venv/
+__pycache__/
+*.pyc
+.env
+rag_agent.log
+history.json
+temp/
+node_modules/

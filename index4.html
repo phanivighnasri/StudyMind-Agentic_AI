@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>StudyMind AI — Your Personal AI Study Team</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ----- CSS CUSTOM PROPERTIES (Light + Purple Theme) ----- */
+    :root {
+      --bg-page: #f8faff;
+      --bg-surface: #ffffff;
+      --bg-input: #f3f4f8;
+      --accent: #7c5cff;
+      --accent-dark: #6248d1;
+      --accent-soft: #f0ecff;
+      --text-primary: #1e1b2c;
+      --text-muted: #5b5b7e;
+      --text-disabled: #b0b0c8;
+      --border-default: 1px solid rgba(0, 0, 0, 0.08);
+      --border-accent: 1px solid rgba(124, 92, 255, 0.35);
+      --radius-card: 16px;
+      --radius-input: 12px;
+      --radius-pill: 40px;
+      --transition-fast: 200ms ease;
+      --transition-slow: 400ms ease-out;
+      --max-width: 1200px;
+      --section-padding: 100px 0;
+      --section-padding-mobile: 60px 0;
+      --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 8px 28px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* utility */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: var(--section-padding);
+    }
+    @media (max-width: 768px) {
+      .section {
+        padding: var(--section-padding-mobile);
+      }
+    }
+
+    /* buttons & links */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 28px;
+      font-weight: 600;
+      border-radius: var(--radius-input);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      background: none;
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    .btn-primary {
+      background: linear-gradient(105deg, var(--accent) 0%, #9b7eff 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(124, 92, 255, 0.2);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(124, 92, 255, 0.25);
+      background: linear-gradient(105deg, #6a48f5, #8d6eff);
+    }
+    .btn-outline {
+      border: var(--border-default);
+      color: var(--text-primary);
+      background: white;
+    }
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .btn-ghost {
+      color: var(--text-muted);
+    }
+    .btn-ghost:hover {
+      color: var(--accent);
+    }
+
+    /* ----- 
+     PAGE (split) with alignment fixes ----- */
+    .login-container {
+  display: flex;
+  width: 100%;   /* 🔥 ADD THIS */
+  height: 100%;
+}
+    .login-left {
+      flex: 1;
+      background: linear-gradient(145deg, #ffffff 0%, #f5f0ff 100%);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 64px;
+      overflow: hidden;
+    }
+    .login-right {
+      flex: 1;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      box-shadow: -8px 0 32px rgba(0, 0, 0, 0.02);
+    }
+    @media (max-width: 900px) {
+      .login-container { flex-direction: column; }
+      .login-left { min-height: 380px; padding: 48px 32px; text-align: center; align-items: center; }
+      .login-right { padding: 48px 24px; }
+      .left-content { text-align: center; }
+    }
+
+    .left-content {
+      position: relative;
+      z-index: 2;
+      max-width: 500px;
+    }
+    .left-content .eyebrow {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .left-content h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #1e1b2c, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .left-content p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    /* orbital animation SVG - light theme adjustments */
+    .orbital-svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .ring {
+      fill: none;
+      stroke: rgba(124, 92, 255, 0.15);
+      stroke-width: 1.4;
+    }
+    .accent-ring {
+      stroke: var(--accent);
+      opacity: 0.5;
+    }
+    .dot {
+      fill: var(--accent);
+      opacity: 0.6;
+    }
+    .line {
+      stroke: rgba(124, 92, 255, 0.2);
+      stroke-width: 1.2;
+    }
+
+    /* login form card */
+ 
+    .auth-card {
+      max-width: 420px;
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      padding: 32px 28px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .logo-mark svg {
+      width: 36px;
+      height: 36px;
+    }
+    .logo-mark span {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e1b2c, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .tab-switch {
+      display: flex;
+      gap: 12px;
+      background: var(--bg-input);
+      border-radius: var(--radius-pill);
+      padding: 4px;
+      margin-bottom: 32px;
+    }
+    .tab-btn {
+      flex: 1;
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-muted);
+      transition: all var(--transition-fast);
+    }
+    .tab-btn.active {
+      background: white;
+      color: var(--accent);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    .social-buttons {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .social-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: white;
+      border: var(--border-default);
+      border-radius: var(--radius-input);
+      padding: 10px;
+      color: var(--text-primary);
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .social-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+    .divider {
+      text-align: center;
+      margin: 24px 0;
+      position: relative;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: calc(50% - 30px);
+      height: 1px;
+      background: var(--border-default);
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+    .input-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      background: var(--bg-input);
+      border: var(--border-default);
+      border-radius: var(--radius-input);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: all var(--transition-fast);
+      font-size: 0.95rem;
+    }
+    .input-group input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.1);
+    }
+    .input-icon {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+    .forgot-link {
+      text-align: right;
+      margin-bottom: 24px;
+    }
+    .forgot-link a, .toggle-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .auth-form .btn-primary {
+      width: 100%;
+      margin-top: 8px;
+    }
+    .toggle-text {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .hidden-form {
+      display: none;
+    }
+
+    /* ----- LANDING PAGE STYLES (Light purple/white theme) ----- */
+    #landing-view {
+      display: none;
+      background: var(--bg-page);
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      align-items: center;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-primary);
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background: white;
+        padding: 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+        box-shadow: var(--shadow-sm);
+      }
+      .nav-links.open {
+        display: flex;
+      }
+      .mobile-menu-btn {
+        display: block;
+      }
+    }
+
+    .hero {
+      text-align: center;
+      padding-top: 60px;
+    }
+    .eyebrow-pill {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border-radius: var(--radius-pill);
+      padding: 6px 16px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      max-width: 800px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, #1e1b2c, var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 32px;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 48px;
+    }
+    .mock-dashboard {
+      max-width: 900px;
+      margin: 0 auto;
+      border-radius: 28px;
+      background: white;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      aspect-ratio: 16/9;
+      display: flex;
+      overflow: hidden;
+    }
+    .mock-sidebar {
+      width: 30%;
+      background: #f9f7fe;
+      border-right: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 16px;
+    }
+    .mock-chat {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .bubble {
+      background: #f3f0ff;
+      border-radius: 20px;
+      padding: 12px 16px;
+      max-width: 80%;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+    .bubble.user {
+      align-self: flex-end;
+      background: var(--accent);
+      color: white;
+    }
+    .marquee {
+      background: white;
+      padding: 20px 0;
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      white-space: nowrap;
+    }
+    .marquee-track {
+      display: inline-block;
+      animation: scroll 30s linear infinite;
+    }
+    .marquee span {
+      display: inline-block;
+      margin: 0 30px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+      text-align: center;
+      background: white;
+      border-radius: 48px;
+      padding: 40px 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    .stat-item h3 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #9b7eff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 32px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: var(--radius-card);
+      padding: 28px;
+      transition: transform var(--transition-fast);
+      box-shadow: var(--shadow-sm);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+      box-shadow: 0 16px 32px rgba(124, 92, 255, 0.08);
+    }
+    .agent-showcase {
+      margin-top: 80px;
+    }
+    .agent-row {
+      display: flex;
+      align-items: center;
+      gap: 48px;
+      margin-bottom: 80px;
+      flex-wrap: wrap;
+    }
+    .agent-text {
+      flex: 1;
+    }
+    .agent-visual {
+      flex: 1;
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 28px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
+    }
+    @media (max-width: 768px) {
+      .agent-row { flex-direction: column; }
+      .agent-row.reverse { flex-direction: column; }
+    }
+    .cap-list {
+      list-style: none;
+      margin: 16px 0;
+    }
+    .cap-list li {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pricing-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 40px 0;
+    }
+    .pricing-cards {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .pricing-card {
+      background: white;
+      border-radius: var(--radius-card);
+      padding: 32px;
+      flex: 1;
+      min-width: 280px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s;
+    }
+    .pricing-card.popular {
+      border-color: var(--accent);
+      position: relative;
+    }
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      left: 24px;
+      background: var(--accent);
+      color: white;
+      padding: 4px 14px;
+      border-radius: var(--radius-pill);
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+    .faq-item {
+      background: white;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: var(--radius-card);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+    .faq-question {
+      padding: 20px 24px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-primary);
+    }
+    .faq-answer {
+      padding: 0 24px 24px 24px;
+      color: var(--text-muted);
+      display: none;
+    }
+    .faq-item.active .faq-answer {
+      display: block;
+    }
+    .cta-banner {
+      background: white;
+      text-align: center;
+      border-radius: 48px;
+      padding: 64px 32px;
+      box-shadow: var(--shadow-md);
+      border: 1px solid rgba(0,0,0,0.02);
+    }
+    footer {
+      border-top: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 48px 0 24px;
+      background: #2a2545;
+      color: #e0dcff;
+    }
+    .footer-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 40px;
+    }
+    .fade-up {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1), transform 0.7s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* custom hover */
+    .agent-visual .mock-chat {
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+<div id="login-view">
+  <div class="login-container">
+    <div class="login-left">
+      <div class="left-content">
+        <div class="eyebrow">Introducing StudyMind AI</div>
+        <h1>Unlock the Power<br>of Learning</h1>
+        <p>Your 24/7 AI study team — built for deep focus and accelerated mastery.</p>
+      </div>
+      <svg class="orbital-svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid slice">
+        <g id="rings">
+          <circle cx="300" cy="300" r="120" class="ring" />
+          <circle cx="300" cy="300" r="180" class="ring" />
+          <circle cx="300" cy="300" r="240" class="ring accent-ring" />
+          <circle cx="300" cy="300" r="280" class="ring" />
+        </g>
+        <g id="dots">
+          <circle cx="420" cy="300" r="4" class="dot"><animate attributeName="r" values="4;6;4" dur="2s" repeatCount="indefinite"/></circle>
+          <circle cx="300" cy="420" r="3" class="dot"><animate attributeName="r" values="3;5;3" dur="2.5s" repeatCount="indefinite"/></circle>
+          <circle cx="180" cy="300" r="4" class="dot"><animate attributeName="r" values="4;6;4" dur="1.8s" repeatCount="indefinite"/></circle>
+          <circle cx="300" cy="180" r="3" class="dot"><animate attributeName="r" values="3;5;3" dur="2.2s" repeatCount="indefinite"/></circle>
+        </g>
+        <g id="lines">
+          <line x1="300" y1="300" x2="420" y2="300" class="line"><animate attributeName="stroke-dasharray" values="0,120;120,0" dur="4s" repeatCount="indefinite"/></line>
+          <line x1="300" y1="300" x2="300" y2="420" class="line"><animate attributeName="stroke-dasharray" values="0,120;120,0" dur="4.5s" repeatCount="indefinite"/></line>
+          <line x1="300" y1="300" x2="180" y2="300" class="line"><animate attributeName="stroke-dasharray" values="0,120;120,0" dur="5s" repeatCount="indefinite"/></line>
+        </g>
+        <animateTransform attributeName="transform" type="rotate" from="0 300 300" to="360 300 300" dur="40s" repeatCount="indefinite" xlink:href="#rings"/>
+        <animateTransform attributeName="transform" type="rotate" from="360 300 300" to="0 300 300" dur="25s" repeatCount="indefinite" xlink:href="#dots"/>
+      </svg>
+    </div>
+    <div class="login-right">
+      <div class="auth-card">
+        <div class="logo-mark">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+            <path d="M2 17L12 22L22 17" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+            <path d="M2 12L12 17L22 12" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span>StudyMind</span>
+        </div>
+        <div class="tab-switch">
+          <div class="tab-btn active" data-tab="signin">Sign In</div>
+          <div class="tab-btn" data-tab="signup">Create Account</div>
+        </div>
+        <div id="signin-form" class="auth-form">
+          <div class="social-buttons">
+            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>Google</button>
+            <button class="social-btn"><svg width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12c0 4.42 2.87 8.17 6.84 9.49.5.09.68-.21.68-.48 0-.24-.01-.87-.01-1.71-2.78.6-3.37-1.34-3.37-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02.8-.22 1.65-.33 2.5-.33.85 0 1.7.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85 0 1.34-.01 2.42-.01 2.75 0 .27.18.58.69.48C19.13 20.17 22 16.42 22 12c0-5.52-4.48-10-10-10z"/></svg>GitHub</button>
+          </div>
+          <div class="divider">OR</div>
+          <div class="input-group"><span class="input-icon">✉️</span><input type="email" placeholder="Email or username" id="login-email"></div>
+          <div class="input-group"><span class="input-icon">🔒</span><input type="password" placeholder="Password" id="login-password"></div>
+          <div class="forgot-link"><a href="#">Forgot password?</a></div>
+          <button class="btn btn-primary" id="signin-action">Sign In with StudyMind →</button>
+          <div class="toggle-text">Don't have an account? <a href="#" id="goto-signup" class="toggle-link">Create one</a></div>
+        </div>
+        <div id="signup-form" class="auth-form hidden-form">
+          <div class="input-group"><span class="input-icon">👤</span><input type="text" placeholder="Full Name" id="signup-name"></div>
+          <div class="input-group"><span class="input-icon">✉️</span><input type="email" placeholder="Email" id="signup-email"></div>
+          <div class="input-group"><span class="input-icon">🔒</span><input type="password" placeholder="Password" id="signup-password"></div>
+          <div class="input-group"><span class="input-icon">🔒</span><input type="password" placeholder="Confirm Password" id="signup-confirm"></div>
+          <button class="btn btn-primary" id="signup-action">Create Account →</button>
+          <div class="toggle-text">Already have an account? <a href="#" id="goto-signin" class="toggle-link">Sign In</a></div>
+        </div>
+        <div style="margin-top: 20px; text-align:center; font-size:0.75rem;"><a href="#" id="view-landing-link" style="color: var(--accent);">← Back to Home</a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="landing-view">
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo-mark"><svg width="28" height="28" viewBox="0 0 24 24"><path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#7c5cff" stroke-width="1.5"/><path d="M2 17L12 22L22 17" stroke="#7c5cff" stroke-width="1.5"/><path d="M2 12L12 17L22 12" stroke="#7c5cff" stroke-width="1.5"/></svg><span>StudyMind</span></div>
+      <div class="mobile-menu-btn" id="mobileMenuBtn">☰</div>
+      <div class="nav-links" id="navLinks">
+        <a href="#agents">Features</a><a href="#features">Agents</a><a href="#faq">FAQ</a>
+        <a href="#" id="show-login-nav" class="btn-ghost">Sign In</a>
+        <a href="#" class="btn-primary" style="padding:8px 20px;">Get Started</a>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <section class="hero container"><div class="eyebrow-pill">5 AI Agents · Always On</div><h1>Your Personal AI Study Team — Available 24/7</h1><p>Five specialized agents — Tutor, Planner, Quiz, Research, Summarizer — working together so you learn smarter, not harder.</p><div class="hero-buttons"><a href="#" class="btn btn-primary">Start Free →</a><a href="#" class="btn btn-outline">See How It Works</a></div><div class="mock-dashboard"><div class="mock-sidebar"><div style="background:#7c5cff20; height:40px; border-radius:8px;"></div></div><div class="mock-chat"><div class="bubble">📚 I'm your AI Tutor. Ask anything!</div><div class="bubble user">Explain transformer networks</div><div class="bubble">They use attention mechanism...</div></div></div></section>
+    <div class="marquee"><div class="marquee-track">  <span>Powered by Multi-Agent AI</span>
+  <span>5 Specialized Learning Agents</span>
+  <span>Real-time Adaptive Responses</span>
+  <span>Dynamic Task Orchestration</span>
+  <span>Personalized Study Workflows</span>
+  <span>24/7 Intelligent Assistance</span>
+
+  <span>Powered by Multi-Agent AI</span>
+  <span>5 Specialized Learning Agents</span>></div></div>
+    <div class="container section"><div class="stats"><div class="stat-item"><h3>10,000+</h3><p>Students Taught</p></div><div class="stat-item"><h3>5</h3><p>Specialized AI Agents</p></div><div class="stat-item"><h3>94%</h3><p>Satisfaction Rate</p></div></div></div>
+    <div id="features" class="container section"><div><div class="eyebrow-pill" style="margin-bottom:12px;">Core tools</div><h2 style="font-size:2rem;">Meet Your AI Study Team</h2></div><div class="features-grid"><div class="feature-card">💪 Motivation Agent — Keep your momentum with personalized encouragement</div><div class="feature-card">📅 Planner Agent — Personalized study plans & deadline tracking</div><div class="feature-card">🎯 Orchestration Agent — Coordinate multiple agents to deliver seamless outcomes</div><div class="feature-card">⏰ Smart Reminders — Stay on track with timely alerts and nudges</div><div class="feature-card">📝 Content Agent — Turn long texts into structured notes</div><div class="feature-card">📊 Evaluation Agent — Visual insights on your learning journey</div></div></div>
+    <div id="agents" class="container section"><h2 style="margin-bottom:48px;">Everything You Need to Excel</h2><div class="agent-showcase"><div class="agent-row"><div class="agent-text"><span class="eyebrow-pill">🧠 FEATURE 01</span><h3>Adaptive Tutor</h3><p>Breaks down complex concepts with Socratic dialogue and tailored examples.</p><ul class="cap-list"><li>✔ Step-by-step reasoning</li><li>✔ Personalized pace</li><li>✔ 24/7 availability</li></ul><a href="#" class="toggle-link">Chat with this Agent →</a></div><div class="agent-visual"><div class="mock-chat" style="gap:8px"><div class="bubble">What's the derivative of x²?</div><div class="bubble user">2x</div><div class="bubble">Exactly! Now let's try chain rule...</div></div></div></div>
+      <div class="agent-row reverse"><div class="agent-text"><span class="eyebrow-pill">📅 FEATURE 02</span><h3>Smart Planner</h3><p>Builds adaptive study schedules based on your deadlines and energy.</p><ul class="cap-list"><li>✔ Deadline tracking</li><li>✔ Pomodoro integration</li><li>✔ Progress reminders</li></ul><a href="#" class="toggle-link">Chat with this Agent →</a></div><div class="agent-visual"><div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;"><div style="background:#7c5cff; border-radius:4px; color:white; text-align:center;">M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div></div><div style="margin-top:12px;">📘 Study: ML Basics</div></div></div>
+      <div class="agent-row"><div class="agent-text"><span class="eyebrow-pill">❓ FEATURE 03</span><h3>QuizMaster</h3><p>Generates adaptive quizzes that target your weak areas.</p><ul class="cap-list"><li>✔ Instant feedback</li><li>✔ Spaced repetition</li><li>✔ Topic mastery</li></ul><a href="#" class="toggle-link">Chat with this Agent →</a></div><div class="agent-visual"><div style="background:#f3f0ff; padding:12px; border-radius:12px;">📝 Question: What is a transformer? <br>🔘 Attention mechanism</div></div></div>
+      <div class="agent-row reverse"><div class="agent-text"><span class="eyebrow-pill">🔍 FEATURE 04</span><h3>Deep Researcher</h3><p>Synthesizes academic papers and web sources into concise summaries.</p><ul class="cap-list"><li>✔ Citation extraction</li><li>✔ Key insights</li><li>✔ Source linking</li></ul><a href="#" class="toggle-link">Chat with this Agent →</a></div><div class="agent-visual"><div>📄 “Attention Is All You Need” → Summary: Introduced transformer architecture, 2017.</div></div></div>
+      <div class="agent-row"><div class="agent-text"><span class="eyebrow-pill">📝 FEATURE 05</span><h3>Smart Summarizer</h3><p>Turns long articles into structured notes & flashcards.</p><ul class="cap-list"><li>✔ Bullet-point notes</li><li>✔ Key terms extraction</li><li>✔ Export to PDF</li></ul><a href="#" class="toggle-link">Chat with this Agent →</a></div><div class="agent-visual"><div>📌 Summary: • Neural networks • Backpropagation • Activation functions</div></div></div>
+    </div></div>
+
+    <div id="faq" class="container section"><div style="text-align:center;"><span class="eyebrow-pill">FAQ</span><h2>Got questions?</h2></div><div class="faq-item"><div class="faq-question">How does StudyMind personalize learning? <span>+</span></div><div class="faq-answer">Our AI agents analyze your performance, goals, and learning pace to tailor explanations, schedules, and quiz difficulty.</div></div><div class="faq-item"><div class="faq-question">Can I use StudyMind on mobile? <span>+</span></div><div class="faq-answer">Absolutely! The platform is fully responsive and works seamlessly on phones, tablets, and desktop.</div></div><div class="faq-item"><div class="faq-question">Is my data secure? <span>+</span></div><div class="faq-answer">Yes, we use industry-standard encryption and never share your personal study data.</div></div></div>
+    
+    <div class="container section"><div class="cta-banner"><h2 style="font-size:2rem;">Ready to unlock your potential?</h2><p style="margin:16px 0; color:var(--text-muted);">Join thousands of students who study smarter, not harder.</p><button class="btn btn-primary" id="finalCtaBtn">Get Started Free →</button></div></div>
+    <footer><div class="container"><div class="footer-grid"><div><div style="font-weight:700;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+            <path d="M2 17L12 22L22 17" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+            <path d="M2 12L12 17L22 12" stroke="#7c5cff" stroke-width="1.5" fill="none"/>
+            
+<div id="agent-section" style="display:none; padding:40px;">
+  <h2>Ask StudyMind AI</h2>
+
+  <input type="text" id="agent-input" placeholder="Enter your topic" style="padding:10px; width:300px;">
+  
+  <button onclick="callPlanner()" style="padding:10px 20px;">Run Planner</button>
+
+  <div id="agent-output" style="margin-top:20px;"></div>
+</div>
+          </svg> StudyMind</div><div style="color:var(--text-muted);">Your AI-powered study team.</div></div><div><strong>Product</strong><br>Features<br>Agents<br>Pricing</div><div><strong>Resources</strong><br>Blog<br>FAQ<br>Changelog</div><div><strong>Company</strong><br>About<br>Contact<br>Privacy</div></div><div style="text-align:center; margin-top:48px; color:var(--text-muted); font-size:0.8rem;">© 2025 StudyMind AI — learn without limits</div></div></footer>
+  </main>
+</div>
+
+<script>
+  // view toggle
+  const loginView = document.getElementById('login-view');
+  const landingView = document.getElementById('landing-view');
+  function showLogin() { loginView.style.display = 'flex'; landingView.style.display = 'none'; }
+  function showLanding() { loginView.style.display = 'none'; landingView.style.display = 'block'; }
+  document.getElementById('view-landing-link')?.addEventListener('click', (e) => { e.preventDefault(); showLanding(); });
+  document.getElementById('show-login-nav')?.addEventListener('click', (e) => { e.preventDefault(); showLogin(); });
+  document.getElementById('finalCtaBtn')?.addEventListener('click', () => showLogin());
+  document.querySelectorAll('.btn-primary, .btn-outline').forEach(btn => { if(btn.innerText.includes('Start Free') || btn.innerText.includes('Get Started')) btn.addEventListener('click', (e) => { e.preventDefault(); showLogin(); }); });
+  // login tab
+  const tabBtns = document.querySelectorAll('.tab-btn');
+  const signinForm = document.getElementById('signin-form');
+  const signupForm = document.getElementById('signup-form');
+  function setActiveTab(tab) {
+    tabBtns.forEach(btn => btn.classList.remove('active'));
+    if (tab === 'signin') {
+      tabBtns[0].classList.add('active');
+      signinForm.classList.remove('hidden-form');
+      signupForm.classList.add('hidden-form');
+    } else {
+      tabBtns[1].classList.add('active');
+      signinForm.classList.add('hidden-form');
+      signupForm.classList.remove('hidden-form');
+    }
+  }
+  tabBtns[0].addEventListener('click', () => setActiveTab('signin'));
+  tabBtns[1].addEventListener('click', () => setActiveTab('signup'));
+  document.getElementById('goto-signup')?.addEventListener('click', (e) => { e.preventDefault(); setActiveTab('signup'); });
+  document.getElementById('goto-signin')?.addEventListener('click', (e) => { e.preventDefault(); setActiveTab('signin'); });
+  // mock auth alerts
+  document.getElementById('signin-action')?.addEventListener('click', () => { 
+  alert('Demo mode: Welcome back! (frontend only)'); 
+  
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('agent-section').style.display = 'block';
+});
+  document.getElementById('signup-action')?.addEventListener('click', () => { 
+  alert('Demo: Account created!'); 
+  
+  document.getElementById('login-view').style.display = 'none';
+  document.getElementById('agent-section').style.display = 'block';
+});
+
+  // faq accordion
+  document.querySelectorAll('.faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const faq = q.parentElement;
+      faq.classList.toggle('active');
+    });
+  });
+  // scroll reveal
+  const revealElements = document.querySelectorAll('#landing-view .section, #landing-view .hero, #landing-view .stats, #landing-view .features-grid, .agent-showcase, .pricing-cards, .cta-banner');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  revealElements.forEach(el => { el.classList.add('fade-up'); observer.observe(el); });
+  // mobile menu
+  const mobileBtn = document.getElementById('mobileMenuBtn');
+  const navLinks = document.getElementById('navLinks');
+  mobileBtn?.addEventListener('click', () => navLinks.classList.toggle('open'));
+  
+  //api call js
+  async function callPlanner() {
+  const input = document.getElementById('agent-input').value;
+
+  const res = await fetch('http://127.0.0.1:5000/planner', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ input })
+  });
+
+  const data = await res.json();
+  document.getElementById('agent-output').innerText = data.response;
+}
+
+  // default view: login visible
+  showLogin();
+</script>
+</body>
+</html>

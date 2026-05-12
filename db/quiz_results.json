@@ -1,0 +1,146 @@
+[
+  {
+    "timestamp": "2026-03-28T10:42:16.284110",
+    "score": 2,
+    "total": 5,
+    "percentage": 40.0,
+    "weak_topics": [
+      "source code management"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T10:42:54.344545",
+    "score": 2,
+    "total": 5,
+    "percentage": 40.0,
+    "weak_topics": [
+      "evaluate my performance"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T11:04:46.553236",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "source code management"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T11:09:07.523434",
+    "score": 0,
+    "total": 5,
+    "percentage": 0.0,
+    "weak_topics": [
+      "scm?"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T11:39:41.715295",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "scm?"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T11:50:50.679224",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "scm?"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T12:09:21.403212",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "source code management"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T12:31:52.487773",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "source code management"
+    ]
+  },
+  {
+    "timestamp": "2026-03-28T17:26:37.953745",
+    "score": 4,
+    "total": 5,
+    "percentage": 80.0,
+    "weak_topics": [
+      "take git version control"
+    ]
+  },
+  {
+    "timestamp": "2026-04-03T08:20:48.585148",
+    "score": 0,
+    "total": 5,
+    "percentage": 0.0,
+    "weak_topics": [
+      "version control"
+    ]
+  },
+  {
+    "timestamp": "2026-04-03T10:20:07.691741",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "take"
+    ]
+  },
+  {
+    "timestamp": "2026-04-03T18:09:40.026143",
+    "score": 0,
+    "total": 5,
+    "percentage": 0.0,
+    "weak_topics": [
+      "veresion control"
+    ]
+  },
+  {
+    "timestamp": "2026-04-03T22:42:57.608591",
+    "score": 0,
+    "total": 5,
+    "percentage": 0.0,
+    "weak_topics": [
+      "iot"
+    ]
+  },
+  {
+    "timestamp": "2026-04-04T10:32:51.975965",
+    "score": 3,
+    "total": 5,
+    "percentage": 60.0,
+    "weak_topics": [
+      "version control"
+    ]
+  },
+  {
+    "timestamp": "2026-04-04T10:51:07.672477",
+    "score": 0,
+    "total": 5,
+    "percentage": 0.0,
+    "weak_topics": [
+      "version control"
+    ]
+  },
+  {
+    "timestamp": "2026-05-12T20:02:25.377884",
+    "score": 1,
+    "total": 5,
+    "percentage": 20.0,
+    "weak_topics": [
+      "give me test"
+    ]
+  }
+]
